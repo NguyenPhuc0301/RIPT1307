@@ -1,7 +1,7 @@
 import { Button, List, message, Spin } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'umi';  // Import useNavigate
+import { useNavigate } from 'umi';  // Import useNavigate
 
 const HomePage: React.FC = () => {
   const [questions, setQuestions] = useState<any[]>([]);  // Lưu danh sách câu hỏi
@@ -41,10 +41,21 @@ const HomePage: React.FC = () => {
         itemLayout="horizontal"
         dataSource={questions}
         renderItem={(question) => (
-          <List.Item>
+          <List.Item
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate(`/questions/${question._id}`)} // Thêm sự kiện click cho cả item
+          >
             <List.Item.Meta
               title={
-                <Link to={`/question/${question._id}`}>{question.title}</Link>  // Liên kết đến trang chi tiết bài viết
+                <span
+                  style={{ color: '#1677ff', textDecoration: 'underline' }}
+                  onClick={e => {
+                    e.stopPropagation(); // Ngăn sự kiện nổi bọt để không gọi lại onClick của List.Item
+                    navigate(`/questions/${question._id}`);
+                  }}
+                >
+                  {question.title}
+                </span>
               }
               description={`Được đăng bởi: ${question.username} | Tags: ${question.tags.join(', ')}`}
             />
